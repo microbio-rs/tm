@@ -8,7 +8,11 @@ doctest = false
 
 [dependencies]
 axum = { version = "0.7.9" }
+chrono = { version = "0.4.39", features = ["serde"] }
+minijinja = "2.5.0"
+serde = { version = "1.0.216", features = ["derive"] }
 tokio = { version = "1.42.0", features = ["macros", "rt-multi-thread", "signal"] }
+validator = { version = "0.19.0", features = ["derive"] }
 
 [dev-dependencies]
 reqwest = "0.12.9"
