@@ -58,6 +58,38 @@ async fn test_create_okr_with_valid_dates() {
     assert_eq!(location, "/okrs/1/add-key-results");
 }
 
+#[tokio::test]
+async fn test_create_okr_with_empty_objective() {
+    let listener = TcpListener::bind("127.0.0.1:0")
+        .await
+        .expect("Failed to bind to address");
+    let addr = run_server(listener).await;
+
+    let url = format!("http://{}/okrs", addr);
+
+    let form_data = [
+        ("objective", ""),
+        ("owner", "Engineering Team"),
+        ("start_date", "2024-01-01"),
+        ("end_date", "2024-12-31"),
+    ];
+
+    let client = Client::builder()
+        // Set the maximum number of redirects to follow
+        .redirect(Policy::none())
+        .build()
+        .unwrap();
+
+    let response = client
+        .post(&url)
+        .form(&form_data)
+        .send()
+        .await
+        .expect("Failed to send request");
+
+    assert_eq!(response.status(), 400, "Expected 400 See Other");
+}
+
 // #[tokio::test]
 // async fn test_create_okr_with_invalid_dates() {
 //     let listener = TcpListener::bind("127.0.0.1:0")
